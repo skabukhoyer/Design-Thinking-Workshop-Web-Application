@@ -5,3 +5,6 @@ __pycache__/*
 # Ignore test files
 *test.py
 *test.js
+
+# Ignore database files
+*.db

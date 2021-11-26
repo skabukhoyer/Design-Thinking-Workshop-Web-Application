@@ -6,13 +6,26 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   </head>
   <body>
-    <form action="/login" method="post">
+    <form action="/signup" method="post">
+      <input type="text" class="form-label" name="username" placeholder="Enter name" />
+      <input type="password" class="form-label" name="password" placeholder="Enter password" />
+      <select name="role" id="role">
+        <option value="participant">Participant</option>
+        <option value="stakeholder">Stakeholder</option>
+        <option value="host">Host</option>
+      </select>
+      <input type="submit" class="btn btn-primary" value="Submit">
+      <!-- {% if error %}
+      <div class="alert alert-danger" role="alert">Error: {{ error }}!</div>
+      {% endif %} -->
+    </form>
+    <form action="/signin" method="post">
       <input type="text" class="form-label" name="username" placeholder="Enter name" />
       <input type="password" class="form-label" name="password" placeholder="Enter password" />
       <input type="submit" class="btn btn-primary" value="Submit">
-      {% if error %}
+      <!-- {% if error %}
       <div class="alert alert-danger" role="alert">Error: {{ error }}!</div>
-      {% endif %}
+      {% endif %} -->
     </form>
   </body>
 </html>
