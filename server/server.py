@@ -8,13 +8,6 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_manager, login_user, logout_user, login_required, UserMixin
 
-user_database = [
-    {
-        "username": "nithish",
-        "password": "password"
-    }
-]
-
 # Initialise app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
@@ -64,6 +57,8 @@ class User(UserMixin, db.Model):
     # contact = db.Column(db.String(80), nullable=True)
     # about = db.Column(db.String(80), nullable=True)
 
+# Signin/signup routes
+
 @login_manager.user_loader
 def load_user(user_id):
     """ Fetches from the database, the user with given user id.
@@ -80,7 +75,7 @@ def signin():
         return render_template('login.html')
     if(request.method=='POST'):
         data = request.form
-        print("signin: ", data)
+        # print("signin: ", data)
         username = data['username']
         password = data['password']
         check_user = User.query.filter_by(username=username).first()
@@ -107,7 +102,7 @@ def signup():
     """Function to handle requests to /signup route."""
     if(request.method=='POST'):
         data = request.form
-        print("signup: ", data)
+        # print("signup: ", data)
         username = data['username']
         password = data['password']
         role = data['role']
@@ -124,37 +119,56 @@ def signup():
             user = User(username=username, password=password, role=role)
             db.session.add(user)
             db.session.commit()
-            print(user.username, user.password, user.role)
+            # print(user.username, user.password, user.role)
             return redirect(url_for('signin'))
 
-# Initialise config variables
-app.config['logged_in'] = False
+# User routes
+
+# class User(UserMixin, db.Model):
+#     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
+#     username = db.Column(db.String(80), nullable=False)
+#     password = db.Column(db.String(80), nullable=False)
+#     role = db.Column(db.String(80), nullable=False)
+
+@app.route("/create_user", methods=['POST'])
+def create_user():
+    if(request.method=='POST'):
+        data = request.get_json()
+        username = data['username']
+        password = data['password']
+        role = data['role']
+        check_user = User.query.filter_by(username=username).first()
+        if(check_user is not None):
+            return 'User exists', 400
+        else:
+            user = User(username=username, password=password, role=role)
+            db.session.add(user)
+            db.session.commit()
+            # print(user.username, user.password, user.role)
+            return 'Created successfully'
+
+@app.route("/read_user", methods=['POST'])
+def read_user():
+    if(request.method=='POST'):
+        data = request.get_json()
+        username = data['username']
+        check_user = User.query.filter_by(username=username).first()
+        if(check_user is not None):
+            res = {}
+            res["id"] = check_user.id
+            res["username"] = check_user.username
+            res["password"] = check_user.password
+            res["role"] = check_user.role
+            return jsonify(res)
+        else:
+            return 'User does not exist', 400
+
+# Static routes
 
 @app.route("/", methods=['GET'])
 @login_required
 def home():
     return render_template('home.html')
-
-# # Define login route
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     # Validate the request if post request, else display login page
-#     if request.method == 'POST':
-#         flag = False
-#         print(request.form['username'], request.form['password'])
-#         for item in user_database:
-#             if request.form['username'] == item['username'] and request.form['password'] == item['password']:
-#                 flag = True
-#                 break
-#         if flag:
-#             app.config['logged_in'] = True
-#             return redirect(url_for('home'))
-#         else:
-#             # return log_the_user_in(request.form['username'])
-#             error = 'Invalid username/password'
-#             return render_template('login.html', error=error)
-#     else:
-#         return render_template('login.html', error=None)
 
 if(__name__ == '__main__'):
     app.run(port=8000,debug=True)
