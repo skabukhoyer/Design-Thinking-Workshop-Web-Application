@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 # from flask_login import LoginManager, login_manager, login_user, logout_user, login_required, UserMixin
 
 # Initialise app
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://newuser:password@localhost/ssd_db'
 app.config['SECRET_KEY'] = 'secretkey'
@@ -53,6 +53,7 @@ class User(db.Model):
     username = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(80), nullable=False)
     role = db.Column(db.String(80), nullable=False)
+    name = db.Column(db.String(80), nullable=False)
     # gender = db.Column(db.String(80), nullable=True)
     # dob = db.Column(db.String(80), nullable=True)
     # contact = db.Column(db.String(80), nullable=True)
@@ -82,6 +83,7 @@ def signin():
         check_user = User.query.filter_by(username=username).first()
         if(check_user is not None):
             if(check_user.password == password):
+                print(check_user.name, ":::name", check_user.username)
                 # login_user(check_user)
                 return redirect(url_for('home'))
             else:
@@ -107,6 +109,7 @@ def signup():
         username = data['username']
         password = data['password']
         role = data['role']
+        name = data['name']
         # gender = data['gender']
         # dob = data['dob']
         # contact = data['contact']
@@ -117,7 +120,8 @@ def signup():
             # return render_template('login.html', error=error)
             return 'User exists'
         else:
-            user = User(username=username, password=password, role=role)
+            user = User(username=username, password=password, role=role, name=name)
+            print(user.name, ":::name")
             db.session.add(user)
             db.session.commit()
             # print(user.username, user.password, user.role)
@@ -497,4 +501,5 @@ def home():
     return render_template('home.html')
 
 if(__name__ == '__main__'):
+    db.create_all()
     app.run(port=8000,debug=True)
