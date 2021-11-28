@@ -6,7 +6,7 @@
 # Dependencies
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_manager, login_user, logout_user, login_required, UserMixin
+# from flask_login import LoginManager, login_manager, login_user, logout_user, login_required, UserMixin
 
 # Initialise app
 app = Flask(__name__)
@@ -15,8 +15,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
 app.config['SECRET_KEY'] = 'secretkey'
 
 db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
 
 class Team(db.Model):
     id = db.Column(db.String(80), nullable=False, primary_key=True)
@@ -47,7 +47,8 @@ class Chat(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     team_name = db.Column(db.String(80), nullable=False)
 
-class User(UserMixin, db.Model):
+# class User(UserMixin, db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
     username = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(80), nullable=False)
@@ -59,14 +60,14 @@ class User(UserMixin, db.Model):
 
 # Signin/signup routes
 
-@login_manager.user_loader
-def load_user(user_id):
-    """ Fetches from the database, the user with given user id.
-
-    Keyword Arguments:
-    user_id -- string/integer
-    """
-    return User.query.get(int(user_id))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     """ Fetches from the database, the user with given user id.
+#
+#     Keyword Arguments:
+#     user_id -- string/integer
+#     """
+#     return User.query.get(int(user_id))
 
 @app.route('/signin', methods = ['POST', 'GET'])
 def signin():
@@ -81,8 +82,8 @@ def signin():
         check_user = User.query.filter_by(username=username).first()
         if(check_user is not None):
             if(check_user.password == password):
-                login_user(check_user)
-                return render_template('home.html')
+                # login_user(check_user)
+                return redirect(url_for('home'))
             else:
                 error = 'Invalid credentials'
                 return redirect(url_for('signin'))
@@ -91,7 +92,7 @@ def signin():
             return redirect(url_for('signin'))
 
 @app.route('/signout', methods=['GET'])
-@login_required
+# @login_required
 def signout():
     """Function to handle requests to /signout route."""
     logout_user()
@@ -266,12 +267,6 @@ def delete_team():
 
 # Chat routes
 
-# class Chat(db.Model):
-#     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
-#     content = db.Column(db.String(1000), nullable=True)
-#     user_id = db.Column(db.Integer, nullable=False)
-#     team_name = db.Column(db.String(80), nullable=False)
-
 @app.route("/create_chat", methods=['POST'])
 def create_chat():
     if(request.method=='POST'):
@@ -341,10 +336,163 @@ def delete_chat():
         else:
             return 'Chat does not exist', 400
 
+# Empathise routes
+
+@app.route("/create_empathize", methods=['POST'])
+def create_empathize():
+    if(request.method=='POST'):
+        data = request.get_json()
+        team_name = data["team_name"]
+        member_id = data["member_id"]
+        content = data["content"]
+        empathize = Empathize(content=content, member_id=member_id, team_name=team_name)
+        db.session.add(empathize)
+        db.session.commit()
+        return jsonify(empathize.id)
+
+@app.route("/read_empathize", methods=['POST'])
+def read_empathize():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data['id']
+        check_empathize = Empathize.query.filter_by(id=id).first()
+        if(check_empathize is not None):
+            res = {}
+            res["id"] = check_empathize.id
+            res["team_name"] = check_empathize.team_name
+            res["member_id"] = check_empathize.member_id
+            res["content"] = check_empathize.content
+            return jsonify(res)
+        else:
+            return 'Empathize entry does not exist', 400
+
+@app.route("/get_all_empathize", methods=['POST'])
+def get_all_empathise():
+    if(request.method=='POST'):
+        data = Empathize.query.all()
+        response = {}
+        for item in data:
+            response[ item.id ] = {
+                "content": item.content,
+                "member_id": item.member_id,
+                "team_name": item.team_name
+            }
+        return response
+
+@app.route("/update_empathize", methods=['POST'])
+def update_empathize():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data["id"]
+        check_empathize = Empathize.query.filter_by(id=id).first()
+        if(check_empathize is not None):
+            check_empathize.content = data["content"]
+            check_empathize.member_id = data["member_id"]
+            check_empathize.team_name = data["team_name"]
+            db.session.commit()
+            return 'Updated empathize entry successfully'
+        else:
+            return 'Empathize entry does not exist', 400
+
+@app.route("/delete_empathize", methods=['POST'])
+def delete_empathise():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data["id"]
+        check_empathize = Empathize.query.filter_by(id=id).first()
+        if(check_empathize is not None):
+            db.session.delete(check_empathize)
+            db.session.commit()
+            return 'Deleted empathize entry successfully'
+        else:
+            return 'Empathize entry does not exist', 400
+
+# Stage routes
+
+# class Stage(db.Model):
+#     id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True)
+#     team_name = db.Column(db.String(80), nullable=False)
+#     define_content = db.Column(db.String(1000), nullable=True)
+#     ideate_content = db.Column(db.String(1000), nullable=True)
+#     prototype_content = db.Column(db.String(1000), nullable=True)
+
+@app.route("/create_stage", methods=['POST'])
+def create_stage():
+    if(request.method=='POST'):
+        data = request.get_json()
+        team_name = data["team_name"]
+        define_content = data["define_content"]
+        ideate_content = data["ideate_content"]
+        prototype_content = data["prototype_content"]
+        stage = Stage(team_name=team_name, define_content=define_content, ideate_content=ideate_content, prototype_content=prototype_content)
+        db.session.add(stage)
+        db.session.commit()
+        return jsonify(stage.id)
+
+@app.route("/read_stage", methods=['POST'])
+def read_stage():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data['id']
+        check_stage = Stage.query.filter_by(id=id).first()
+        if(check_stage is not None):
+            res = {}
+            res["id"] = check_stage.id
+            res["team_name"] = check_stage.team_name
+            res["define_content"] = check_stage.define_content
+            res["ideate_content"] = check_stage.ideate_content
+            res["prototype_content"] = check_stage.prototype_content
+            return jsonify(res)
+        else:
+            return 'Stage entry does not exist', 400
+
+@app.route("/get_all_stage", methods=['POST'])
+def get_all_stage():
+    if(request.method=='POST'):
+        data = Stage.query.all()
+        response = {}
+        for item in data:
+            response[ item.id ] = {
+                "team_name": item.team_name,
+                "define_content": item.define_content,
+                "ideate_content": item.ideate_content,
+                "prototype_content": item.prototype_content
+            }
+        return response
+
+@app.route("/update_stage", methods=['POST'])
+def update_stage():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data["id"]
+        check_stage = Stage.query.filter_by(id=id).first()
+        if(check_stage is not None):
+            check_stage.team_name = data["team_name"]
+            check_stage.define_content = data["define_content"]
+            check_stage.ideate_content = data["ideate_content"]
+            check_stage.prototype_content = data["prototype_content"]
+            db.session.commit()
+            return 'Updated stage entry successfully'
+        else:
+            return 'Stage entry does not exist', 400
+
+@app.route("/delete_stage", methods=['POST'])
+def delete_stage():
+    if(request.method=='POST'):
+        data = request.get_json()
+        id = data["id"]
+        check_stage = Empathize.query.filter_by(id=id).first()
+        if(check_stage is not None):
+            db.session.delete(check_stage)
+            db.session.commit()
+            return 'Deleted stage entry successfully'
+        else:
+            return 'Stage entry does not exist', 400
+
 # Static routes
 
 @app.route("/", methods=['GET'])
-@login_required
+# @login_required
 def home():
     return render_template('home.html')
 
