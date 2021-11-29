@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+	<title>Virtual Design Workshop</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/fav.png') }}" type="image/png" sizes="16x16"> 
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+
+
+<body>
+    <div class="theme-layout">
+        <div class="responsive-header">
+            <div class="mh-head first Sticky">
+                <span class="mh-text">
+                    <h1> Define Stage </h1>
+                </span>
+            </div>
+        </div><!-- responsive header -->
+
+        <div class="topbar stick">
+            <div class="mh-head first Sticky">
+                <h1> Define Stage </h1>
+            </div>
+        </div><!-- topbar -->
+
+        <section>
+            <div class="gap2 gray-bg">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row merged20" id="page-contents">
+                                <div class="col-lg-2">
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="central-meta item">
+                                        <form id = "form1" action="#" method="post">
+                                            <label for="exampleFormControlTextarea1"><h3> Enter your define stage data below. Only one person in the team needs to fill the data </h3></label>
+                                            
+                                            <textarea style = "border-style: solid; border-color: red;" class="form-control rounded-0" id="definedata" name = "definedata" rows="10"></textarea>
+
+                                            <br>
+                                            
+                                            <button style="margin-left:90%;" type="submit" class="btn btn-primary">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4">
+                                    <aside class="sidebar static right">
+                                        <div id = "chatdiv" class="widget">
+                                            <h4 class="widget-title">Chat Box</h4>
+
+                                            <ul id = "messages" class="followers">
+                                                {% for msg in messages %}
+                                                    <li> <b>{{username[msg.uid]}}:</b> {{ msg.content }} </li>
+                                                {% endfor %}
+                                            </ul>
+                                            
+                                            <form id = "form2" action="" method="POST">
+                                                <div style="float: right">
+                                                    <input type="text" id="myMessage" size = "34">
+                                                    <button class="btn btn-primary" type="submit" id="sendbutton">Send</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </aside>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="widget">
+                            <div class="foot-logo">
+                                <div class="logo">
+                                    <h3>Virtual Design Workshop</h3>
+                                </div>
+                                <p>
+                                    IIIT Hyderabad
+                                </p>
+                            </div>
+
+                            <ul class="location">
+                                <li>
+                                    <i class="ti-map-alt"></i>
+                                    <p>Professor CR Rao Rd, Gachibowli, Hyderabad, Telangana 500032</p>
+                                </li>
+                                <li>
+                                    <i class="ti-mobile"></i>
+                                    <p>040 6653 1000</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>follow</h4></div>
+                            <ul class="list-style">
+                                <li><i class="fa fa-facebook-square"></i> <a href="https://www.facebook.com/IIITH" title="">facebook</a></li>
+                                <li><i class="fa fa-twitter-square"></i><a href="https://twitter.com/iiit_hyderabad" title="">twitter</a></li>
+                                <li><i class="fa fa-instagram"></i><a href="https://www.instagram.com/iiit.hyderabad" title="">instagram</a></li>
+                                <li><i class="fa fa-linkedin"></i> <a href="https://www.linkedin.com/school/iiit-hyderabad/" title="">Linkedin</a></li>
+                                <li><i class="fa fa-youtube-square"></i> <a href="https://www.youtube.com/channel/UCzCMyBy0VRoQBF8x-TsXTnQ" title="">Youtube</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>Navigate</h4></div>
+                            <ul class="list-style">
+                                <li><a href="https://www.iiit.ac.in/" title="">about us</a></li>
+                                <li><a href="https://www.iiit.ac.in/contact/" title="">contact us</a></li>
+                                <li><a href="https://www.iiit.ac.in/" title="">terms & Conditions</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>useful links</h4></div>
+                            <ul class="list-style">
+                                <li><a href="https://serc.iiit.ac.in/" title="">SERC</a></li>
+                                <li><a href="https://cvit.iiit.ac.in/" title="">CVIT</a></li>
+                                <li><a href="https://ltrc.iiit.ac.in/" title="">LTRC</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>download apps</h4></div>
+                            <ul class="colla-apps">
+                                <li><a href="https://play.google.com/store?hl=en" title=""><i class="fa fa-android"></i>android</a></li>
+                                <li><a href="https://www.apple.com/lae/ios/app-store/" title=""><i class="ti-apple"></i>iPhone</a></li>
+                                <li><a href="https://www.microsoft.com/store/apps" title=""><i class="fa fa-windows"></i>Windows</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    
+    
+    <script type="text/javascript">
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on( 'connect', function() {
+
+        var form = $( '#form2' ).on( 'submit', function( e ) {
+            e.preventDefault()
+            let user_input = $('#myMessage').val()
+            
+            socket.emit( 'my event', {
+                user_name : "{{currentusername}}",
+              message : user_input
+            })
+
+            $('#myMessage').val('');
+          })
+        })
+
+        socket.on( 'my response', function( msg ) {
+            if( typeof msg.message !== 'undefined' ) {
+                    $("#messages").append('<li>'+"<b>"+msg.user_name+"</b>"+": "+msg.message+'</li>');
+
+                    $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+            }
+        })
+    
+    </script>
+
+</body>
+
+</html>

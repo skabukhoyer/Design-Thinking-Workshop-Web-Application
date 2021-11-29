@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+	<title>Virtual Design Thinking Workshop</title>
+    <link rel="icon" href="../static/../static/images/fav.png" type="image/png" sizes="16x16">
+
+    <link rel="stylesheet" href="../static/css/main.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/color.css">
+    <link rel="stylesheet" href="../static/css/responsive.css">
+
+</head>
+<body>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+
+         {% if category == 'error' %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+
+        {% if category == 'info' %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+<!--<div class="se-pre-con"></div>-->
+<div class="theme-layout">
+	
+	<div class="topbar stick">
+		<div class="logo">
+			<a title="" href="http://127.0.0.1:5000/teams"><img src="../static/images/logo.jpg" width="34px" height="34px" alt=""></a>
+		</div>
+
+		<div class="top-area">
+			<ul class="main-menu">
+				<li>
+					<a href="http://127.0.0.1:5000/teams" title="">Teams</a>
+					<ul>
+						<li><a href="http://127.0.0.1:5000/teams" title="">Teams</a></li>
+						<li><a href="http://127.0.0.1:5000/host_inbox" title="">Inbox</a></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="">
+				<li><a href="index.html" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
+
+				<li>
+					<a href="inbox.html" title="Messages" data-ripple=""><i class="ti-comment"></i></a>
+				</li>
+			</ul>
+			<div class="user-img">
+				<img src="../static/images/resources/admin.jpg" width= "50px" height="50px" alt="">
+				<div class="user-setting">
+					<a href="http://127.0.0.1:5000/signout" title=""><i class="ti-power-off"></i>Logout</a>
+				</div>
+			</div>
+		</div>
+	</div><!-- topbar -->
+
+	<section>
+		<div class="page-header">
+			<div class="header-inner">
+				<h2>Member List</h2>
+				<nav class="breadcrumb">
+				  <a href="index-2.html" class="breadcrumb-item"><i class="fa fa-home"></i></a>
+				  <span class="breadcrumb-item active">Team Members</span>
+				</nav>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="gap gray-bg">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row" id="page-contents">
+							<div class="col-lg-3">
+								<aside class="sidebar static">
+									<div class="widget">
+										<h4 class="widget-title">Shortcuts</h4>
+										<ul class="naves">
+											<li>
+												<i class="ti-user"></i>
+												<a href="http://127.0.0.1:5000/teams" title="">Teams</a>
+											</li>
+											<li>
+												<i class="ti-mouse-alt"></i>
+												<a href="http://127.0.0.1:5000/host_inbox" title="">Inbox</a>
+											</li>
+											<li>
+												<i class="ti-power-off"></i>
+												<a href="http://127.0.0.1:5000/signout" title="">Logout</a>
+											</li>
+										</ul>
+									</div><!-- Shortcuts -->
+								</aside>
+							</div><!-- sidebar -->
+							<div class="col-lg-6">
+								<div class="central-meta">
+									<h3 class="widget-title">{{team_name}}</h3>
+									<h4 class="widget-title">Problem Statement: {{ problem }}</h4>
+									<h5 class="widget-title">Active Stage: {{ activestage }}</h5>
+									<form action = "http://127.0.0.1:5000/add_member/{{ tid }}" method = "POST">
+									  <div class="form-row align-items-center">
+									    <div class="col-auto">
+									      <label class="sr-only" for="inlineFormInputGroup">Username</label>
+									      <div class="input-group mb-2">
+									        <div class="input-group-prepend">
+									          <div class="input-group-text">@</div>
+									        </div>
+									        <input type="text" name = "username" class="form-control" id="inlineFormInputGroup" placeholder="Username">
+									      </div>
+									    </div>
+									    <div class="col-auto">
+									      <button type="submit" class="btn btn-primary mb-2">Add to Team</button>
+									    </div>
+									  </div>
+									</form>
+									<br>
+							       	<table class="table">
+									  <thead class="thead-dark">
+									    <tr>
+									      <th scope="col">Username</th>
+									      <th scope="col">Name</th>
+									      <th scope="col">Action</th>
+									    </tr>
+									  </thead>
+									  <tbody id = "memtb">
+									    {% for i in member %}
+									    <tr>
+									      <td>{{ i.uname }}</td>
+									      <td>{{ i.name }}</td>
+									      <td>
+									      	<a href = "http://127.0.0.1:5000/remove_user/{{ tid }}/{{ i.uid }}"><button type="button" class="btn btn-danger">Delete</button>
+									      </td>
+									    </tr>
+									    {% endfor %}
+									  </tbody>
+									</table>
+								</div><!-- add post new box -->
+							</div><!-- centerl meta -->
+							<div class="col-lg-3">
+								<aside class="sidebar static">
+									<div class="widget friend-list stick-widget">
+										<h4 class="widget-title">Participants</h4>
+										<div id="searchDir"></div>
+										<ul id="people-list" class="friendz-list">
+											{% for i in participants %}
+											<li>
+												<div class="friendz-meta">
+													<a href="time-line.html">{{ i.username }}</a>
+													<i><a href="#" class="__cf_email__">{{ i.email }}</a></i>
+												</div>
+											</li>
+											{% endfor %}
+										</ul>
+									</div><!-- friends list sidebar -->
+								</aside>
+							</div><!-- sidebar -->
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+	
+	<footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4">
+                        <div class="widget">
+                            <div class="foot-logo">
+                                <div class="logo">
+                                    <h3>Virtual Design Workshop</h3>
+                                </div>
+                                <p>
+                                    IIIT Hyderabad
+                                </p>
+                            </div>
+
+                            <ul class="location">
+                                <li>
+                                    <i class="ti-map-alt"></i>
+                                    <p>Professor CR Rao Rd, Gachibowli, Hyderabad, Telangana 500032</p>
+                                </li>
+                                <li>
+                                    <i class="ti-mobile"></i>
+                                    <p>040 6653 1000</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>follow</h4></div>
+                            <ul class="list-style">
+                                <li><i class="fa fa-facebook-square"></i> <a href="https://www.facebook.com/IIITH" title="">facebook</a></li>
+                                <li><i class="fa fa-twitter-square"></i><a href="https://twitter.com/iiit_hyderabad" title="">twitter</a></li>
+                                <li><i class="fa fa-instagram"></i><a href="https://www.instagram.com/iiit.hyderabad" title="">instagram</a></li>
+                                <li><i class="fa fa-linkedin"></i> <a href="https://www.linkedin.com/school/iiit-hyderabad/" title="">Linkedin</a></li>
+                                <li><i class="fa fa-youtube-square"></i> <a href="https://www.youtube.com/channel/UCzCMyBy0VRoQBF8x-TsXTnQ" title="">Youtube</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>Navigate</h4></div>
+                            <ul class="list-style">
+                                <li><a href="https://www.iiit.ac.in/" title="">about us</a></li>
+                                <li><a href="https://www.iiit.ac.in/contact/" title="">contact us</a></li>
+                                <li><a href="https://www.iiit.ac.in/" title="">terms & Conditions</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>useful links</h4></div>
+                            <ul class="list-style">
+                                <li><a href="https://serc.iiit.ac.in/" title="">SERC</a></li>
+                                <li><a href="https://cvit.iiit.ac.in/" title="">CVIT</a></li>
+                                <li><a href="https://ltrc.iiit.ac.in/" title="">LTRC</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <div class="widget">
+                            <div class="widget-title"><h4>download apps</h4></div>
+                            <ul class="colla-apps">
+                                <li><a href="https://play.google.com/store?hl=en" title=""><i class="fa fa-android"></i>android</a></li>
+                                <li><a href="https://www.apple.com/lae/ios/app-store/" title=""><i class="ti-apple"></i>iPhone</a></li>
+                                <li><a href="https://www.microsoft.com/store/apps" title=""><i class="fa fa-windows"></i>Windows</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+	<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="../static/js/main.min.js"></script>
+	<script src="../static/js/script.js"></script>
+	<script src="../static/js/map-init.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+
+</body>	
+
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <!-- 
+    <meta http-equiv="refresh" content="20">         
+	 -->
+
+	<title>Virtual Design Workshop</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/fav.png') }}" type="image/png" sizes="16x16"> 
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+
+
+<body>
+	{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category == 'success' %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+
+         {% if category == 'error' %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+
+        {% if category == 'info' %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close">
+                <span aria-hidden="true">x</span>
+              </button>
+              <strong>{{message}}</strong>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+<!--<div class="se-pre-con"></div>-->
+<div class="theme-layout">
+	
+	<div class="responsive-header">
+		<div class="mh-head first Sticky">
+			<span class="mh-text">
+				<h1> {{teaminfo.teamname}} </h1>
+			</span>
+			<a href="{{url_for('logout')}}" class="btn btn-danger btn-lg" style = "float: right;">
+          		<span class="glyphicon glyphicon-log-out"></span> Log out
+        	</a>
+		</div>
+	</div><!-- responsive header -->
+	
+	<div class="topbar stick">
+		<div class="mh-head first Sticky">
+			<span class="mh-text">
+				<h1> {{teaminfo.teamname}} </h1>
+			</span>
+			<a href="{{url_for('logout')}}" class="btn btn-danger btn-lg" style = "float: right;" >
+          		<span class="glyphicon glyphicon-log-out"></span> Log out
+        	</a>
+		</div>
+	</div><!-- topbar -->
+
+
+		
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-2">
+								<aside class="sidebar static left">
+									<div class="widget">
+										<h4 class="widget-title">Stages</h4>
+										<ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left">
+												<li class="nav-item">
+
+													{% if teaminfo.activestage=="Empathize"%}		
+													<a href="{{url_for('empathizestage')}}" class="nav-link active" >Empathize</a>
+
+													{% else %}
+													<a href="#" class="nav-link" >Empathize</a>
+													{% endif %}
+												
+												</li>
+
+												<li class="nav-item">
+													{% if teaminfo.activestage=="Define"%}		
+													<a href="{{url_for('definestage')}}" class="nav-link active" >Define</a>
+
+													{% else %}
+													<a href="#" class="nav-link" >Define</a>
+													{% endif %}
+												</li>
+
+												<li class="nav-item">
+													{% if teaminfo.activestage=="Ideate"%}		
+													<a href="{{url_for('ideatestage')}}" class="nav-link active" >Ideate</a>
+
+													{% else %}
+													<a href="#" class="nav-link" >Ideate</a>
+													{% endif %}
+												</li>
+
+												<li class="nav-item">
+													{% if teaminfo.activestage=="Prototype"%}		
+													<a href="{{url_for('prototypestage')}}" class="nav-link active" >Prototype</a>
+
+													{% else %}
+													<a href="#" class="nav-link" >Prototype</a>
+													{% endif %}
+												</li>
+
+												<li class="nav-item">
+													{% if teaminfo.activestage=="Test"%}		
+													<a href="{{url_for('teststage')}}" class="nav-link active" >Test</a>
+
+													{% else %}
+													<a href="#" class="nav-link" >Test</a>
+													{% endif %}
+												</li>
+											</ul>
+									</div><!-- Shortcuts -->
+									
+									
+									<div class="widget">
+										<h4 class="widget-title">Team Members</h4>
+										<ul class="followers">
+											{% if teaminfo.mid1 is not none %}
+											<li>
+												<figure><img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt=""></figure>
+												<div class="friend-meta">
+													<h4>{{username[teaminfo.mid1]}}</h4>
+												</div>
+											</li>
+											{% endif %}
+
+											{% if teaminfo.mid2 is not none %}
+											<li>
+												<figure><img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt=""></figure>
+												<div class="friend-meta">
+													<h4>{{username[teaminfo.mid2]}}</h4>
+												</div>
+											</li>
+											{% endif %}
+
+											{% if teaminfo.mid3 is not none %}
+											<li>
+												<figure><img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt=""></figure>
+												<div class="friend-meta">
+													<h4>{{username[teaminfo.mid3]}}</h4>
+												</div>
+											</li>
+											{% endif %}
+
+											{% if teaminfo.mid4 is not none %}
+											<li>
+												<figure><img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt=""></figure>
+												<div class="friend-meta">
+													<h4>{{username[teaminfo.mid4]}}</h4>
+												</div>
+											</li>
+											{% endif %}
+
+											{% if teaminfo.mid5 is not none %}
+											<li>
+												<figure><img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt=""></figure>
+												<div class="friend-meta">
+													<h4>{{username[teaminfo.mid5]}}</h4>
+												</div>
+											</li>
+											{% endif %}
+										</ul>
+									</div><!-- who's following -->
+
+								</aside>
+							</div><!-- sidebar -->
+
+							<div class="col-lg-6">
+								
+								<div class="loadMore">
+								
+								{% if othercontent is not none %}
+								{% if othercontent.prototype is not none %}
+								<div class="central-meta item">
+									<div class="user-post">
+										<div class="friend-info">
+											<figure>
+												<img src="{{ url_for('static', filename='images/resources/team.jpg') }}" alt="">
+											</figure>
+
+											<div class="friend-name">
+												<ins><a href="time-line.html" title="">{{teaminfo.teamname}}</a></ins>
+											</div>
+
+											<div class="post-meta">
+												<h3>Prototype Stage Content</h3>
+											
+												<p>{{ obj.x }}<br/>
+												{{ obj.y }}</p>
+												<img src="data:;base64,{{ image }}"/>
+											
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endif %}
+								{% endif %}
+
+								{% if othercontent is not none %}
+								{% if othercontent.ideate is not none %}
+								<div class="central-meta item">
+									<div class="user-post">
+										<div class="friend-info">
+											<figure>
+												<img src="{{ url_for('static', filename='images/resources/team.jpg') }}" alt="">
+											</figure>
+
+											<div class="friend-name">
+												<ins><a href="time-line.html" title="">{{teaminfo.teamname}}</a></ins>
+											</div>
+
+											<div class="post-meta">
+												<h3>Ideate Stage Content</h3>
+												<div class="description">
+													<h5>
+														{% for line in othercontent.ideate.splitlines() %}
+															{{line}}<br>
+														{% endfor %}
+													</h5>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endif %}
+								{% endif %}
+
+
+								{% if othercontent is not none %}
+								{% if othercontent.define is not none %}
+								<div class="central-meta item">
+									<div class="user-post">
+										<div class="friend-info">
+											<figure>
+												<img src="{{ url_for('static', filename='images/resources/team.jpg') }}" alt="">
+											</figure>
+
+											<div class="friend-name">
+												<ins><a href="time-line.html" title="">{{teaminfo.teamname}}</a></ins>
+											</div>
+
+											<div class="post-meta">
+												<h3>Define Stage Content</h3>
+												<div class="description">
+													<h5>
+														{% for line in othercontent.define.splitlines() %}
+															{{line}}<br>
+														{% endfor %}
+													</h5>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endif %}
+								{% endif %}
+
+
+								{% for content in empathizecontent %}
+
+								<div class="central-meta item">
+									<div class="user-post">
+										<div class="friend-info">
+											<figure>
+												<img src="{{ url_for('static', filename='images/resources/user.jpg') }}" alt="">
+											</figure>
+
+											<div class="friend-name">
+												<ins><a href="time-line.html" title="">{{username[content.uid]}}</a></ins>
+											</div>
+
+											<div class="post-meta">
+												<h3>Empathize Stage Content</h3>
+												<div class="description">
+													<h5>
+														{% for line in content.content.splitlines() %}
+															{{line}}<br>
+														{% endfor %}
+													</h5>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+
+								
+								
+								</div>
+								
+							</div><!-- centerl meta -->
+							
+							<div class="col-lg-4">
+								<aside class="sidebar static right">
+									<div class="widget">
+										<h4 class="widget-title">Problem Statement</h4>	
+										<div class="your-page">
+											<h6>{{teaminfo.problem}}</h6>
+										</div>
+									</div><!-- page like widget -->
+									<div class="widget">											
+									</div>
+									
+									<div id = "chatdiv" class="widget">
+										<h4 class="widget-title">Chat Box</h4>
+
+										<ul id = "messages" class="followers">
+											{% for msg in messages %}
+												<li> <b>{{username[msg.uid]}}:</b> {{ msg.content }} </li>
+											{% endfor %}
+										</ul>
+										
+										<form action="" method="POST">
+											<div style="float: right">
+												<input type="text" id="myMessage" size = "34">
+												<button class="btn btn-primary" type="submit" id="sendbutton">Send</button>
+											</div>
+										</form>
+									</div>
+
+								</aside>
+							</div><!-- sidebar -->
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4 col-md-4">
+					<div class="widget">
+						<div class="foot-logo">
+							<div class="logo">
+								<h3>Virtual Design Workshop</h3>
+							</div>
+							<p>
+								IIIT Hyderabad
+							</p>
+						</div>
+
+						<ul class="location">
+							<li>
+								<i class="ti-map-alt"></i>
+								<p>Professor CR Rao Rd, Gachibowli, Hyderabad, Telangana 500032</p>
+							</li>
+							<li>
+								<i class="ti-mobile"></i>
+								<p>040 6653 1000</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4">
+					<div class="widget">
+						<div class="widget-title"><h4>follow</h4></div>
+						<ul class="list-style">
+							<li><i class="fa fa-facebook-square"></i> <a href="https://www.facebook.com/IIITH" title="">facebook</a></li>
+							<li><i class="fa fa-twitter-square"></i><a href="https://twitter.com/iiit_hyderabad" title="">twitter</a></li>
+							<li><i class="fa fa-instagram"></i><a href="https://www.instagram.com/iiit.hyderabad" title="">instagram</a></li>
+							<li><i class="fa fa-linkedin"></i> <a href="https://www.linkedin.com/school/iiit-hyderabad/" title="">Linkedin</a></li>
+							<li><i class="fa fa-youtube-square"></i> <a href="https://www.youtube.com/channel/UCzCMyBy0VRoQBF8x-TsXTnQ" title="">Youtube</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4">
+					<div class="widget">
+						<div class="widget-title"><h4>Navigate</h4></div>
+						<ul class="list-style">
+							<li><a href="https://www.iiit.ac.in/" title="">about us</a></li>
+							<li><a href="https://www.iiit.ac.in/contact/" title="">contact us</a></li>
+							<li><a href="https://www.iiit.ac.in/" title="">terms & Conditions</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4">
+					<div class="widget">
+						<div class="widget-title"><h4>useful links</h4></div>
+						<ul class="list-style">
+							<li><a href="https://serc.iiit.ac.in/" title="">SERC</a></li>
+							<li><a href="https://cvit.iiit.ac.in/" title="">CVIT</a></li>
+							<li><a href="https://ltrc.iiit.ac.in/" title="">LTRC</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4">
+					<div class="widget">
+						<div class="widget-title"><h4>download apps</h4></div>
+						<ul class="colla-apps">
+							<li><a href="https://play.google.com/store?hl=en" title=""><i class="fa fa-android"></i>android</a></li>
+							<li><a href="https://www.apple.com/lae/ios/app-store/" title=""><i class="ti-apple"></i>iPhone</a></li>
+							<li><a href="https://www.microsoft.com/store/apps" title=""><i class="fa fa-windows"></i>Windows</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer><!-- footer -->
+</div>
+	<script src="{{ url_for('static', filename='js/main.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/map-init.js') }}"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+
+
+
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	 
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" 
+	integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous">	
+	</script> --> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    
+    
+    <script type="text/javascript">
+
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+	    socket.on( 'connect', function() {
+
+	  	var form = $( 'form' ).on( 'submit', function( e ) {
+		    e.preventDefault()
+		    let user_input = $('#myMessage').val()
+		    
+		    socket.emit( 'my event', {
+		    	user_name : "{{currentusername}}",
+		      message : user_input
+		    })
+
+		    $('#myMessage').val('');
+		  })
+		})
+
+	    socket.on( 'my response', function( msg ) {
+			if( typeof msg.message !== 'undefined' ) {
+					$("#messages").append('<li>'+"<b>"+msg.user_name+"</b>"+": "+msg.message+'</li>');
+
+					$('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+			}
+		})
+	
+    </script>
+
+</body>	
+</html>
